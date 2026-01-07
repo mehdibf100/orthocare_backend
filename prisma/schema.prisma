@@ -1,0 +1,177 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url= env("DATABASE_URL")
+}
+
+model User {
+  id                Int            @id @default(autoincrement())
+  email             String         @unique
+  name              String?
+  imageUrl          String?
+  googleId          String?        @unique
+  phone             Int?
+  password          String?
+  role              Role           @default(USER)
+  activated         Boolean        @default(false)
+  createdAt         DateTime       @default(now())
+  updatedAt         DateTime       @updatedAt
+  
+  sentMessages      Message[]      @relation("SentMessages")
+  conversations     ConversationParticipant[]
+}
+
+model Conversation {
+  id           Int                        @id @default(autoincrement())
+  createdAt    DateTime                   @default(now())
+  updatedAt    DateTime                   @updatedAt
+  
+  participants ConversationParticipant[]
+  messages     Message[]
+}
+
+model ConversationParticipant {
+  id             Int          @id @default(autoincrement())
+  conversationId Int
+  userId         Int
+  joinedAt       DateTime     @default(now())
+  lastRead       DateTime?
+  
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@unique([conversationId, userId])
+}
+
+model Message {
+  id             Int          @id @default(autoincrement())
+  content        String
+  conversationId Int
+  senderId       Int
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         User         @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  
+  @@index([conversationId])
+  @@index([senderId])
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+// schema.prisma
+model Checklist {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  date      DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Phase préopératoire - Accueil
+  typeIntervention       String?
+  identiteConfirmee      Boolean?
+  siteMarque             Boolean  @default(false)
+  rougeur                Boolean  @default(false)
+  douleur                Boolean  @default(false)
+  lesions                Boolean  @default(false)
+  coteOperer             String?
+  autreCote              String?
+  traitementEnCours      String?
+  allergie               Boolean?
+  douleurEVA             Boolean?
+  risque                 Boolean?
+  chute                  Boolean  @default(false)
+  confusion              Boolean  @default(false)
+  escarre                Boolean  @default(false)
+  saignement             Boolean  @default(false)
+  autreRisque            String?
+  troubleMobilite        Boolean?
+
+  // Préparation administrative
+  consentement           Boolean?
+  informationPatient     Boolean?
+  dossierSoins           Boolean?
+
+  // Préparation physique
+  jeun                   Boolean?
+  douche                 Boolean?
+  preparationPeau        Boolean?
+  bilanSanguin           Boolean?
+  examensComplementaires Boolean?
+  premedication          Boolean  @default(false)
+  perfusion              String?
+  vidangeVesicale        String?
+  oxygenotherapie        String?
+  transfusion            String?
+
+  // Paramètres vitaux préop
+  horaire                String?
+  ta                     String?
+  fc                     String?
+  fr                     String?
+  spo2                   String?
+  gad                    String?
+  temp                   String?
+
+  // Phase peropératoire
+  bijouxOtes             Boolean?
+  installationSpecifique Boolean  @default(false)
+  aiderHabillage         Boolean  @default(false)
+  gererInstruments       Boolean  @default(false)
+  assurerTracabilite     Boolean  @default(false)
+  verifierDocumentation  Boolean  @default(false)
+  typeAnesthesie         String?
+  heureInduction         String?
+  heureIncision          String?
+  heureFermeture         String?
+  heureExtubation        String?
+  heureSortie            String?
+  surveillance           Boolean  @default(false)
+  surveillanceOperatoire Boolean  @default(false)
+  gestionDouleur         Boolean  @default(false)
+  surveillanceConscience Boolean  @default(false)
+  surveillanceEtat       Boolean  @default(false)
+  passationDonnees       Boolean  @default(false)
+
+  // Phase postopératoire
+  vitales                Boolean  @default(false)
+  pansementSaignement    Boolean?
+  pansementEcoulement    Boolean?
+  etatPeau               String?
+  typeDrain              String?
+  quantiteDrain          String?
+  aspectSecretions       String?
+  eva                    Boolean  @default(false)
+  perfusionPost          Boolean  @default(false)
+  traitementPrescrit     Boolean  @default(false)
+  mobilisation           Boolean  @default(false)
+
+  // Suivi à moyen terme
+  repriseMobilite                  Boolean @default(false)
+  surveillanceParametres           Boolean @default(false)
+  autonomieAideHygiene             Boolean @default(false)
+  changementPansement              Boolean @default(false)
+  changementDrains                 Boolean @default(false)
+  medicPrescription                Boolean @default(false)
+  surveillanceDouleur              Boolean @default(false)
+  surveillanceHydratationNutrition Boolean @default(false)
+  surveillancePsy                  Boolean @default(false)
+  educationPatient                 Boolean @default(false)
+  participationSortie              Boolean @default(false)
+  dateChangement                   String?
+  dateAblation                     String?
+  dateSortie                       String?
+
+  // Traitements (JSON)
+  traitements            Json?
+
+  @@unique([userId, date])
+  @@index([userId])
+  @@index([date])
+}
