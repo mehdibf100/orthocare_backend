@@ -130,7 +130,7 @@ export class ConversationService {
       },
     });
 
-    return conversations.map((conv) => this.mapToConversationDTO(conv, userId));
+    return conversations.map((conv :any) => this.mapToConversationDTO(conv, userId));
   }
 
   async getConversationMessages(
