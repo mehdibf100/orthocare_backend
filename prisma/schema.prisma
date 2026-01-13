@@ -175,3 +175,83 @@ model Checklist {
   @@index([userId])
   @@index([date])
 }
+model MedicalForm {
+  id Int @id @default(autoincrement())
+
+  /// 🔑 Meta
+  userId Int
+  createdAt DateTime @default(now())
+
+  /// =====================
+  /// COORDONNÉES
+  /// =====================
+  nom String
+  prenom String
+  sexe String
+  dateNaissance DateTime?
+  age Int?
+  nationalite String?
+  matricule String?
+  service String?
+  lit String?
+  residence String?
+  telephone String?
+  etatCivil String?
+
+  /// Couverture sociale (checkbox)
+  couvertureSociale String[]
+
+  groupeSanguin String?
+  poids Float?
+  taille Float?
+
+  /// Allergie
+  allergie Boolean
+  allergieDetails String?
+
+  /// =====================
+  /// HOSPITALISATION
+  /// =====================
+  dateHospitalisation DateTime?
+  motifHospitalisation String?
+  diagnosticMedical String?
+  diagnosticChirurgical String?
+
+  membreConcerne String[]
+  typeIntervention String[]
+  autreIntervention String?
+  dateIntervention DateTime?
+
+  typeAnesthesie String[]
+  dispositifPlace String[]
+
+  /// =====================
+  /// ANTÉCÉDENTS
+  /// =====================
+  antecedentsMedicaux String?
+  antecedentsChirurgicaux String?
+
+  /// =====================
+  /// TRAITEMENTS
+  /// =====================
+  traitements Treatment[]
+
+  /// =====================
+  /// KINÉSITHÉRAPIE
+  /// =====================
+  kinesitherapie Boolean
+
+  @@map("medical_forms")
+}
+
+model Treatment {
+  id Int @id @default(autoincrement())
+
+  medicalFormId Int
+  medicalForm MedicalForm @relation(fields: [medicalFormId], references: [id], onDelete: Cascade)
+
+  traitement String
+  dose String
+
+  @@map("treatments")
+}
