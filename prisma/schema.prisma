@@ -175,83 +175,68 @@ model Checklist {
   @@index([userId])
   @@index([date])
 }
+
+
 model MedicalForm {
-  id Int @id @default(autoincrement())
+  id                      Int         @id @default(autoincrement())
+  userId                  Int?        // Ajoutez le ? pour rendre optionnel
 
-  /// 🔑 Meta
-  userId Int
-  createdAt DateTime @default(now())
+  createdAt               DateTime    @default(now())
+  updatedAt               DateTime    @updatedAt
 
-  /// =====================
-  /// COORDONNÉES
-  /// =====================
-  nom String
-  prenom String
-  sexe String
-  dateNaissance DateTime?
-  age Int?
-  nationalite String?
-  matricule String?
-  service String?
-  lit String?
-  residence String?
-  telephone String?
-  etatCivil String?
+  // COORDONNÉES
+  nom                     String
+  prenom                  String
+  sexe                    String?
+  dateNaissance           DateTime?
+  age                     Int?
+  nationalite             String?
+  matricule               String?
+  service                 String?
+  lit                     String?
+  residence               String?
+  telephone               String?
+  etatCivil               String?
+  couvertureSociale       String[]
+  groupeSanguin           String?
+  poids                   Float?
+  taille                  Float?
+  allergie                Boolean     @default(false)
+  allergieDetails         String?
 
-  /// Couverture sociale (checkbox)
-  couvertureSociale String[]
+  // HOSPITALISATION
+  dateHospitalisation     DateTime?
+  motifHospitalisation    String?
+  diagnosticMedical       String?
+  diagnosticChirurgical   String?
+  membreConcerne          String[]
+  typeIntervention        String[]
+  autreIntervention       String?
+  dateIntervention        DateTime?
+  typeAnesthesie          String[]
+  dispositifPlace         String[]
 
-  groupeSanguin String?
-  poids Float?
-  taille Float?
-
-  /// Allergie
-  allergie Boolean
-  allergieDetails String?
-
-  /// =====================
-  /// HOSPITALISATION
-  /// =====================
-  dateHospitalisation DateTime?
-  motifHospitalisation String?
-  diagnosticMedical String?
-  diagnosticChirurgical String?
-
-  membreConcerne String[]
-  typeIntervention String[]
-  autreIntervention String?
-  dateIntervention DateTime?
-
-  typeAnesthesie String[]
-  dispositifPlace String[]
-
-  /// =====================
-  /// ANTÉCÉDENTS
-  /// =====================
-  antecedentsMedicaux String?
+  // ANTÉCÉDENTS
+  antecedentsMedicaux     String?
   antecedentsChirurgicaux String?
 
-  /// =====================
-  /// TRAITEMENTS
-  /// =====================
-  traitements Treatment[]
+  // KINÉSITHÉRAPIE
+  kinesitherapie          Boolean     @default(false)
 
-  /// =====================
-  /// KINÉSITHÉRAPIE
-  /// =====================
-  kinesitherapie Boolean
+  // TRAITEMENTS
+  traitements             Treatment[]
 
   @@map("medical_forms")
 }
 
 model Treatment {
-  id Int @id @default(autoincrement())
-
-  medicalFormId Int
-  medicalForm MedicalForm @relation(fields: [medicalFormId], references: [id], onDelete: Cascade)
-
-  traitement String
-  dose String
+  id              Int          @id @default(autoincrement())
+  medicalFormId   Int
+  medicalForm     MedicalForm  @relation(fields: [medicalFormId], references: [id], onDelete: Cascade)
+  
+  traitement      String
+  dose            String
 
   @@map("treatments")
 }
+
