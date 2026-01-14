@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import { createServer } from "http";
+import medicalFormController from './controllers/medicalController';
 
 import authRouter from "./controllers/authController";
 import chatRouter from "./controllers/chatController";
@@ -21,7 +22,7 @@ app.use(express.json({ limit: "1mb" }));
 app.use("/auth", authRouter);
 app.use("/chat", chatRouter);
 app.use("/api/checklist", checkListRouter);
-
+app.use("/medical", medicalFormController);
 app.get("/health", (_req: Request, res: Response) =>
   res.json({ ok: true })
 );

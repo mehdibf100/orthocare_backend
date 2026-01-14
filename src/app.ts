@@ -6,7 +6,8 @@ import { createServer } from "http";
 import authRouter from "./controllers/authController";
 import chatRouter from "./controllers/chatController";
 import checkListRouter from './controllers/checkListController';
-import medicalRouter from './routes/medicalFormRoutes'; // Ajouter cette ligne
+import medicalFormController from './controllers/medicalController';
+
 import { initializeWebSocket } from "./websocket/chatSocket";
 
 dotenv.config();
@@ -25,7 +26,7 @@ app.use("/auth", authRouter);
 app.use("/chat", chatRouter);
 app.use('/api/checklist', checkListRouter);
 app.get("/health", (_req: Request, res: Response) => res.json({ ok: true }));
-app.use("/api/medical-forms", medicalRouter);
+app.use("/medical", medicalFormController);
 
 // ✅ 404 JSON
 app.use((_req, res) => {
