@@ -15,11 +15,25 @@ export async function createMedicalForm(dto: any) {
   return form;
 }
 
-export async function getAllMedicalForms() {
-  return prisma.medicalForm.findMany({
+export async function getAllMedicalForms(codeService?: string) {
+  const whereClause: any = {};
+  
+  if (codeService && codeService.trim() !== "") {
+    whereClause.codeService = codeService.trim();
+  }
+  
+  const results = await prisma.medicalForm.findMany({
+    where: whereClause,
     include: { traitements: true },
     orderBy: { createdAt: "desc" },
   });
+  
+  // Log pour voir les codes de service dans les résultats
+  results.forEach(r => {
+    console.log(`Patient ${r.id}: codeService = ${r.codeService}`);
+  });
+  
+  return results;
 }
 
 export async function getMedicalFormById(id: number) {
@@ -63,6 +77,7 @@ function mapMedicalFormData(data: any) {
   return {
     nom: data.nom || "",
     prenom: data.prenom || "",
+    codeService: data.codeService || null,
     sexe: data.sexe || null,
     dateNaissance: data.dateNaissance ? new Date(data.dateNaissance) : null,
     age: data.age !== undefined && data.age !== null ? Number(data.age) : null,

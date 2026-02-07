@@ -18,9 +18,18 @@ router.post("/", async (req: Request, res: Response) => {
 });
 
 /* GET ALL */
-router.get("/", async (_req: Request, res: Response) => {
+/* GET ALL - avec filtre optionnel par codeService */
+router.get("/", async (req: Request, res: Response) => {
   try {
-    const forms = await medicalService.getAllMedicalForms();
+    const codeService = req.query.codeService as string | undefined;
+    
+    // Log pour debug
+    console.log("Code service reçu:", codeService);
+    
+    const forms = await medicalService.getAllMedicalForms(codeService);
+    
+    console.log("Nombre de formulaires trouvés:", forms.length);
+    
     return res.status(200).json({ success: true, data: forms });
   } catch (err) {
     console.error(err);

@@ -180,6 +180,7 @@ model Checklist {
 model MedicalForm {
   id                      Int         @id @default(autoincrement())
   userId                  Int?        // Ajoutez le ? pour rendre optionnel
+  codeService             String?     // Nouveau champ
 
   createdAt               DateTime    @default(now())
   updatedAt               DateTime    @updatedAt
