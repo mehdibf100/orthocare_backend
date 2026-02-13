@@ -27,12 +27,7 @@ export async function getAllMedicalForms(codeService?: string) {
     include: { traitements: true },
     orderBy: { createdAt: "desc" },
   });
-  
-  // Log pour voir les codes de service dans les résultats
-  results.forEach(r => {
-    console.log(`Patient ${r.id}: codeService = ${r.codeService}`);
-  });
-  
+    
   return results;
 }
 

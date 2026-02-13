@@ -1,4 +1,3 @@
-// checkListController.ts
 import { Router, Request, Response } from "express";
 import checkListService from "../services/checkList.service";
 

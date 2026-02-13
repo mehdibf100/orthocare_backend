@@ -73,103 +73,95 @@ model Checklist {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Phase préopératoire - Accueil
+  // Accueil et évaluation du patient
   typeIntervention       String?
-  identiteConfirmee      Boolean?
-  siteMarque             Boolean  @default(false)
-  rougeur                Boolean  @default(false)
-  douleur                Boolean  @default(false)
-  lesions                Boolean  @default(false)
+  identiteConfirmee      Boolean  @default(false)
   coteOperer             String?
   autreCote              String?
-  traitementEnCours      String?
-  allergie               Boolean?
-  douleurEVA             Boolean?
-  risque                 Boolean?
-  chute                  Boolean  @default(false)
-  confusion              Boolean  @default(false)
-  escarre                Boolean  @default(false)
-  saignement             Boolean  @default(false)
-  autreRisque            String?
-  troubleMobilite        Boolean?
+  etatSiteOperatoire     String?
+  allergieMedicamenteuse Boolean  @default(false)
+  allergieMateriel       Boolean  @default(false)
+  examenPreAG            String?
 
-  // Préparation administrative
-  consentement           Boolean?
-  informationPatient     Boolean?
-  dossierSoins           Boolean?
+  // Préparation administrative et éducative - Au service
+  consentementVerifie    Boolean  @default(false)
+  biaisAdmission         Boolean  @default(false)
+  dossierComplet         Boolean  @default(false)
+  informationPatient     Boolean  @default(false)
+  dossierSoins           Boolean  @default(false)
 
-  // Préparation physique
-  jeun                   Boolean?
-  douche                 Boolean?
-  preparationPeau        Boolean?
-  bilanSanguin           Boolean?
-  examensComplementaires Boolean?
-  premedication          Boolean  @default(false)
-  perfusion              String?
-  vidangeVesicale        String?
-  oxygenotherapie        String?
-  transfusion            String?
+  // Contrôle des prescriptions médicales
+  arretAnticoagulant            Boolean @default(false)
+  arretAntiagregantsPlaquettaires Boolean @default(false)
+  arretAINS                     Boolean @default(false)
+  arretAntidiabetiqueOral       Boolean @default(false)
+  ajustementInsuline            Boolean @default(false)
+  ajustementCorticoides         Boolean @default(false)
+  autreTraitement               Boolean @default(false)
+  premedication                 Boolean @default(false)
+  perfusionsPrescrites          Boolean @default(false)
+  nebulisationOxygenotherapie   Boolean @default(false)
+  transfusionSanguine           Boolean @default(false)
 
-  // Paramètres vitaux préop
-  horaire                String?
-  ta                     String?
-  fc                     String?
-  fr                     String?
-  spo2                   String?
-  gad                    String?
-  temp                   String?
+  // Préparation physique du patient
+  jeunConfirme                  Boolean @default(false)
+  examensComplementaires        Boolean @default(false)
+  preparationCutanee            Boolean @default(false)
+  doucheAntiseptique            Boolean @default(false)
+  habillagePatient              Boolean @default(false)
+  surveillanceParametresVitaux  Boolean @default(false)
 
-  // Phase peropératoire
-  bijouxOtes             Boolean?
-  installationSpecifique Boolean  @default(false)
-  aiderHabillage         Boolean  @default(false)
-  gererInstruments       Boolean  @default(false)
-  assurerTracabilite     Boolean  @default(false)
-  verifierDocumentation  Boolean  @default(false)
-  typeAnesthesie         String?
-  heureInduction         String?
-  heureIncision          String?
-  heureFermeture         String?
-  heureExtubation        String?
-  heureSortie            String?
-  surveillance           Boolean  @default(false)
-  surveillanceOperatoire Boolean  @default(false)
-  gestionDouleur         Boolean  @default(false)
-  surveillanceConscience Boolean  @default(false)
-  surveillanceEtat       Boolean  @default(false)
-  passationDonnees       Boolean  @default(false)
+  // Phase préopératoire - Checklist de la salle
+  materielSterile        Boolean @default(false)
+  epi                    Boolean @default(false)
+  systemeAspiration      Boolean @default(false)
+  garrouPneumatique      Boolean @default(false)
+  bistouriElectrique     Boolean @default(false)
+  tableOperatoire        Boolean @default(false)
+  scialytique            Boolean @default(false)
+  scope                  Boolean @default(false)
+  checklistDMI           Boolean @default(false)
+  coordinationMateriel   Boolean @default(false)
 
-  // Phase postopératoire
-  vitales                Boolean  @default(false)
-  pansementSaignement    Boolean?
-  pansementEcoulement    Boolean?
-  etatPeau               String?
-  typeDrain              String?
-  quantiteDrain          String?
-  aspectSecretions       String?
-  eva                    Boolean  @default(false)
-  perfusionPost          Boolean  @default(false)
-  traitementPrescrit     Boolean  @default(false)
-  mobilisation           Boolean  @default(false)
+  // Au bloc opératoire
+  preparationChariot         Boolean @default(false)
+  accueilPatient             Boolean @default(false)
+  verificationIdentite       Boolean @default(false)
+  concordanceDossier         Boolean @default(false)
+  consentementLibreEclaire   Boolean @default(false)
+  confirmationIntervention   Boolean @default(false)
+  documentationDisponible    Boolean @default(false)
+  retraitBijoux              Boolean @default(false)
+  retraitProteses            Boolean @default(false)
+  retraitLunettes            Boolean @default(false)
+  jeunConfirmeBloc           Boolean @default(false)
+  priseEnChargePsy           Boolean @default(false)
+  positionnementPatient      Boolean @default(false)
+  assistanceMedecin          Boolean @default(false)
+  collaborationEquipe        Boolean @default(false)
 
-  // Suivi à moyen terme
-  repriseMobilite                  Boolean @default(false)
-  surveillanceParametres           Boolean @default(false)
-  autonomieAideHygiene             Boolean @default(false)
-  changementPansement              Boolean @default(false)
-  changementDrains                 Boolean @default(false)
-  medicPrescription                Boolean @default(false)
-  surveillanceDouleur              Boolean @default(false)
-  surveillanceHydratationNutrition Boolean @default(false)
-  surveillancePsy                  Boolean @default(false)
-  educationPatient                 Boolean @default(false)
-  participationSortie              Boolean @default(false)
-  dateChangement                   String?
-  dateAblation                     String?
-  dateSortie                       String?
+  // Phase per-opératoire
+  realisationPansement   Boolean @default(false)
+  interventionIncident   Boolean @default(false)
 
-  // Traitements (JSON)
-  traitements            Json?
+  // Phase post-opératoire
+  gestionComptageMatériel Boolean @default(false)
+  tracabiliteRegistre     Boolean @default(false)
+  declarationIncident     Boolean @default(false)
+  sterilisationMateriel   Boolean @default(false)
+  surveillanceTransport   Boolean @default(false)
+
+  // Surveillance immédiate - Au service
+  verificationConstantes Boolean @default(false)
+  surveillancePansement  Boolean @default(false)
+  surveillanceDrains     Boolean @default(false)
+  evaluationDouleur      Boolean @default(false)
+  surveillanceBiologique Boolean @default(false)
+  perfusionTransfusion   Boolean @default(false)
+  medicationPrescrite    Boolean @default(false)
+  accompagnementLever    Boolean @default(false)
+  surveillanceAutonomie  Boolean @default(false)
+  aideSoinsHygiene       Boolean @default(false)
 
   @@unique([userId, date])
   @@index([userId])
@@ -180,7 +172,6 @@ model Checklist {
 model MedicalForm {
   id                      Int         @id @default(autoincrement())
   userId                  Int?        // Ajoutez le ? pour rendre optionnel
-  codeService             String?     // Nouveau champ
 
   createdAt               DateTime    @default(now())
   updatedAt               DateTime    @updatedAt

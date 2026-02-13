@@ -1,4 +1,3 @@
-// checklist.service.ts
 import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
@@ -51,31 +50,97 @@ export class CheckListService {
 
     // Liste des champs String
     const stringFields = [
-      'typeIntervention', 'coteOperer', 'autreCote', 'traitementEnCours',
-      'autreRisque', 'perfusion', 'vidangeVesicale', 'oxygenotherapie',
-      'transfusion', 'horaire', 'ta', 'fc', 'fr', 'spo2', 'gad', 'temp',
-      'typeAnesthesie', 'heureInduction', 'heureIncision', 'heureFermeture',
-      'heureExtubation', 'heureSortie', 'etatPeau', 'typeDrain',
-      'quantiteDrain', 'aspectSecretions', 'dateChangement', 'dateAblation',
-      'dateSortie'
+      'typeIntervention',
+      'coteOperer',
+      'autreCote',
+      'etatSiteOperatoire',
+      'examenPreAG'
     ];
 
     // Liste des champs Boolean
     const booleanFields = [
-      'identiteConfirmee', 'siteMarque', 'rougeur', 'douleur', 'lesions',
-      'allergie', 'douleurEVA', 'risque', 'chute', 'confusion', 'escarre',
-      'saignement', 'troubleMobilite', 'consentement', 'informationPatient',
-      'dossierSoins', 'jeun', 'douche', 'preparationPeau', 'bilanSanguin',
-      'examensComplementaires', 'premedication', 'bijouxOtes',
-      'installationSpecifique', 'aiderHabillage', 'gererInstruments',
-      'assurerTracabilite', 'verifierDocumentation', 'surveillance',
-      'surveillanceOperatoire', 'gestionDouleur', 'surveillanceConscience',
-      'surveillanceEtat', 'passationDonnees', 'vitales', 'pansementSaignement',
-      'pansementEcoulement', 'eva', 'perfusionPost', 'traitementPrescrit',
-      'mobilisation', 'repriseMobilite', 'surveillanceParametres',
-      'autonomieAideHygiene', 'changementPansement', 'changementDrains',
-      'medicPrescription', 'surveillanceDouleur', 'surveillanceHydratationNutrition',
-      'surveillancePsy', 'educationPatient', 'participationSortie'
+      // Accueil et évaluation
+      'identiteConfirmee',
+      'allergieMedicamenteuse',
+      'allergieMateriel',
+      
+      // Préparation administrative
+      'consentementVerifie',
+      'biaisAdmission',
+      'dossierComplet',
+      'informationPatient',
+      'dossierSoins',
+      
+      // Contrôle prescriptions
+      'arretAnticoagulant',
+      'arretAntiagregantsPlaquettaires',
+      'arretAINS',
+      'arretAntidiabetiqueOral',
+      'ajustementInsuline',
+      'ajustementCorticoides',
+      'autreTraitement',
+      'premedication',
+      'perfusionsPrescrites',
+      'nebulisationOxygenotherapie',
+      'transfusionSanguine',
+      
+      // Préparation physique
+      'jeunConfirme',
+      'examensComplementaires',
+      'preparationCutanee',
+      'doucheAntiseptique',
+      'habillagePatient',
+      'surveillanceParametresVitaux',
+      
+      // Phase préopératoire
+      'materielSterile',
+      'epi',
+      'systemeAspiration',
+      'garrouPneumatique',
+      'bistouriElectrique',
+      'tableOperatoire',
+      'scialytique',
+      'scope',
+      'checklistDMI',
+      'coordinationMateriel',
+      'preparationChariot',
+      'accueilPatient',
+      'verificationIdentite',
+      'concordanceDossier',
+      'consentementLibreEclaire',
+      'confirmationIntervention',
+      'documentationDisponible',
+      'retraitBijoux',
+      'retraitProteses',
+      'retraitLunettes',
+      'jeunConfirmeBloc',
+      'priseEnChargePsy',
+      'positionnementPatient',
+      'assistanceMedecin',
+      'collaborationEquipe',
+      
+      // Phase per-opératoire
+      'realisationPansement',
+      'interventionIncident',
+      
+      // Phase post-opératoire
+      'gestionComptageMatériel',
+      'tracabiliteRegistre',
+      'declarationIncident',
+      'sterilisationMateriel',
+      'surveillanceTransport',
+      
+      // Surveillance immédiate
+      'verificationConstantes',
+      'surveillancePansement',
+      'surveillanceDrains',
+      'evaluationDouleur',
+      'surveillanceBiologique',
+      'perfusionTransfusion',
+      'medicationPrescrite',
+      'accompagnementLever',
+      'surveillanceAutonomie',
+      'aideSoinsHygiene'
     ];
 
     // Traiter les champs String
@@ -91,11 +156,6 @@ export class CheckListService {
         cleaned[field] = Boolean(data[field]);
       }
     });
-
-    // Traiter le champ JSON pour les traitements
-    if (data.traitements && Array.isArray(data.traitements) && data.traitements.length > 0) {
-      cleaned.traitements = data.traitements;
-    }
 
     return cleaned;
   }
