@@ -21,21 +21,32 @@ router.post("/", async (req: Request, res: Response) => {
 /* GET ALL - avec filtre optionnel par codeService */
 router.get("/", async (req: Request, res: Response) => {
   try {
-    const codeService = req.query.codeService as string | undefined;
-    
-    // Log pour debug
-    console.log("Code service reçu:", codeService);
-    
+    const codeServiceRaw = req.query.codeService;
+
+    const codeService =
+      typeof codeServiceRaw === "string" ? codeServiceRaw : undefined;
+
+    console.log("Query params:", req.query);
+    console.log("codeService utilisé:", codeService);
+
     const forms = await medicalService.getAllMedicalForms(codeService);
-    
-    console.log("Nombre de formulaires trouvés:", forms.length);
-    
-    return res.status(200).json({ success: true, data: forms });
-  } catch (err) {
-    console.error(err);
-    return res.status(500).json({ error: "Erreur serveur" });
+
+    return res.status(200).json({
+      success: true,
+      count: forms.length,
+      data: forms,
+    });
+  } catch (err: any) {
+    console.error("GET medical error:", err.message);
+    console.error(err.stack);
+
+    return res.status(500).json({
+      error: "Erreur serveur",
+      details: err.message,
+    });
   }
 });
+
 
 /* GET BY ID */
 router.get("/:id", async (req: Request, res: Response) => {

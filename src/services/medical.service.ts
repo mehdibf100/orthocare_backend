@@ -17,18 +17,16 @@ export async function createMedicalForm(dto: any) {
 
 export async function getAllMedicalForms(codeService?: string) {
   const whereClause: any = {};
-  
-  if (codeService && codeService.trim() !== "") {
-    whereClause.codeService = codeService.trim();
+
+  if (codeService) {
+    whereClause.codeService = codeService;
   }
-  
-  const results = await prisma.medicalForm.findMany({
+
+  return prisma.medicalForm.findMany({
     where: whereClause,
     include: { traitements: true },
     orderBy: { createdAt: "desc" },
   });
-    
-  return results;
 }
 
 export async function getMedicalFormById(id: number) {
