@@ -11,19 +11,7 @@ export class CheckListService {
 
     try {
       // Vérifier si une checklist existe déjà pour cet utilisateur aujourd'hui
-      const existingChecklist = await prisma.checklist.findFirst({
-        where: {
-          userId: userId,
-          date: {
-            gte: today,
-            lt: new Date(today.getTime() + 24 * 60 * 60 * 1000)
-          }
-        },
-      });
 
-      if (existingChecklist) {
-        return { exists: true, checklist: existingChecklist };
-      }
 
       // Nettoyer les données avant l'insertion
       const cleanedData = this.cleanChecklistData(data);
