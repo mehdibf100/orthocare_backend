@@ -12,24 +12,13 @@ router.post("/", async (req: Request, res: Response) => {
       return res.status(400).json({ error: "userId est requis" });
     }
 
-    const result = await checkListService.createOrUpdateChecklist(
-      userId,
-      checklistData
-    );
-
-    if (result.exists) {
-      return res.status(409).json({
-        message: "Vous avez déjà soumis une checklist aujourd'hui",
-        checklist: result.checklist,
-      });
-    }
+    const result = await checkListService.createOrUpdateChecklist(userId, checklistData);
 
     return res.status(201).json({
       message: "Checklist créée avec succès",
       checklist: result.checklist,
     });
   } catch (error: any) {
-    console.error("Erreur lors de la création de la checklist:", error);
     return res.status(500).json({
       error: "Erreur lors de la création de la checklist",
       details: error.message,

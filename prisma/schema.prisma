@@ -163,7 +163,6 @@ model Checklist {
   surveillanceAutonomie  Boolean @default(false)
   aideSoinsHygiene       Boolean @default(false)
 
-  @@unique([userId, date])
   @@index([userId])
   @@index([date])
 }

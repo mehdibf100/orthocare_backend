@@ -4,33 +4,27 @@ const prisma = new PrismaClient();
 
 export class CheckListService {
   // Créer ou mettre à jour une checklist
-  async createOrUpdateChecklist(userId: number, data: any) {
-    // Obtenir la date d'aujourd'hui sans l'heure (format: YYYY-MM-DD)
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
+async createOrUpdateChecklist(userId: number, data: any) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
 
-    try {
-      // Vérifier si une checklist existe déjà pour cet utilisateur aujourd'hui
+  try {
+    const cleanedData = this.cleanChecklistData(data);
 
+    const checklist = await prisma.checklist.create({
+      data: {
+        userId: userId,
+        date: today,
+        ...cleanedData,
+      },
+    });
 
-      // Nettoyer les données avant l'insertion
-      const cleanedData = this.cleanChecklistData(data);
-
-      // Créer une nouvelle checklist
-      const checklist = await prisma.checklist.create({
-        data: {
-          userId: userId,
-          date: today,
-          ...cleanedData,
-        },
-      });
-
-      return { exists: false, checklist };
-    } catch (error) {
-      console.error("Erreur dans createOrUpdateChecklist:", error);
-      throw error;
-    }
+    return { exists: false, checklist };
+  } catch (error) {
+    console.error("Erreur dans createOrUpdateChecklist:", error);
+    throw error;
   }
+}
 
   // Nettoyer les données pour éviter les erreurs de type
   private cleanChecklistData(data: any) {
