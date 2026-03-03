@@ -2,6 +2,7 @@
 import { Router, Request, Response } from "express";
 import conversationService from "../services/conversation.service";
 import { PrismaClient } from "@prisma/client";
+import { io, userSockets } from "../websocket/chatSocket"; // ✅ Import
 
 const prisma = new PrismaClient();
 const router = Router();
@@ -54,9 +55,21 @@ router.post("/conversations", async (req: Request, res: Response) => {
     }
 
     const conversation = await conversationService.findOrCreateConversation(
-      userId,
-      otherUserId
+      parseInt(userId),
+      parseInt(otherUserId)
     );
+
+    // ✅ Notifier l'autre utilisateur si connecté
+    const otherSocketId = userSockets.get(parseInt(otherUserId));
+    if (otherSocketId) {
+      // Envoyer la conversation du point de vue de otherUserId
+      const conversationForOther = await conversationService.findOrCreateConversation(
+        parseInt(otherUserId),
+        parseInt(userId)
+      );
+      io.to(otherSocketId).emit("new_conversation", conversationForOther);
+      console.log(`✅ Notified user ${otherUserId} about new conversation`);
+    }
 
     res.json(conversation);
   } catch (error) {
