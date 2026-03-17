@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import checkListService from "../services/checkList.service";
+import { prisma } from "../prismaClient";
 
 const router = Router();
 
@@ -26,6 +27,27 @@ router.post("/", async (req: Request, res: Response) => {
   }
 });
 
+// ── NOUVEAU : GET TOUTES les checklists (admin dashboard) ────────────────────
+router.get("/all", async (_req: Request, res: Response) => {
+  try {
+    const checklists = await prisma.checklist.findMany({
+      orderBy: { createdAt: "desc" },
+    });
+ 
+    return res.status(200).json({
+      success: true,
+      count: checklists.length,
+      data: checklists,
+    });
+  } catch (error: any) {
+    console.error("GET /all error:", error);
+    return res.status(500).json({
+      error: "Erreur lors de la récupération des checklists",
+      details: error.message,
+    });
+  }
+});
+ 
 // Récupérer la checklist d'aujourd'hui pour un utilisateur
 router.get("/today/:userId", async (req: Request, res: Response) => {
   try {
