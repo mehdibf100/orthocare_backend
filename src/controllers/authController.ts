@@ -22,6 +22,63 @@ router.post("/google-signin", async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Erreur lors de la connexion avec Google" });
   }
 });
+router.get("/users", async (_req: Request, res: Response) => {
+  try {
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        imageUrl: true,
+        phone: true,
+        role: true,
+        activated: true,
+        createdAt: true,
+        updatedAt: true,
+        // password et googleId exclus (sécurité)
+      },
+      orderBy: { createdAt: "desc" },
+    });
+ 
+    return res.status(200).json({
+      success: true,
+      count: users.length,
+      data: users,
+    });
+  } catch (err: any) {
+    console.error("GET /auth/users error:", err);
+    return res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+ 
+// ── NOUVEAU : GET user par ID ────────────────────────────────────────────────
+router.get("/users/:id", async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+    if (isNaN(id)) return res.status(400).json({ error: "ID invalide" });
+ 
+    const user = await prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        imageUrl: true,
+        phone: true,
+        role: true,
+        activated: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+ 
+    if (!user) return res.status(404).json({ error: "Utilisateur non trouvé" });
+    return res.status(200).json({ success: true, data: user });
+  } catch (err: any) {
+    console.error(err);
+    return res.status(500).json({ error: "Erreur serveur" });
+  }
+});
 router.get("/stats", async (_req: Request, res: Response) => {
   try {
     const [totalUsers, activeUsers, adminCount] = await Promise.all([
