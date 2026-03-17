@@ -1,6 +1,7 @@
 // src/controllers/authController.ts
 import { Router, Request, Response } from "express";
 import { googleSignIn } from "../services/authService";
+import { prisma } from "../prismaClient";
 
 const router = Router();
 
@@ -21,5 +22,29 @@ router.post("/google-signin", async (req: Request, res: Response) => {
     return res.status(500).json({ error: "Erreur lors de la connexion avec Google" });
   }
 });
+router.get("/stats", async (_req: Request, res: Response) => {
+  try {
+    const [totalUsers, activeUsers, adminCount] = await Promise.all([
+      prisma.user.count(),
+      prisma.user.count({ where: { activated: true } }),
+      prisma.user.count({ where: { role: "ADMIN" } }),
+    ]);
+ 
+    return res.status(200).json({
+      success: true,
+      data: {
+        totalUsers,
+        activeUsers,
+        inactiveUsers: totalUsers - activeUsers,
+        adminUsers:    adminCount,
+        normalUsers:   totalUsers - adminCount,
+      },
+    });
+  } catch (err: any) {
+    console.error(err);
+    return res.status(500).json({ error: "Erreur serveur" });
+  }
+});
+ 
 
 export default router;
